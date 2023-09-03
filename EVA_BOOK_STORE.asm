@@ -171,6 +171,7 @@ NEWLINE PROC
 NEWLINE ENDP
 
 PRESS_TO_CONTINUE PROC
+    XOR AX,AX
     MOV AH,09H
     LEA DX,INPUT_ERROR_CONTINUE_STR ;PRINT PRESS ANY KEY TO CONTINUE
     INT 21H
@@ -204,11 +205,10 @@ MAIN PROC
             CMP AL,3                ;       |
                 JE MENU3            ;       |
             CMP AL,4                ;       |
-                JE MENU4            ; << FUNCTION >>
-                JG MORETHAN_FOUR    ; CHECK > 4                  
+                JE MENU4            ; << FUNCTION >>                
             CMP AL,0
-                JL LESSTHAN_ZERO
                 JE MENU0
+            JMP RANGE_ERROR         ; OUT OF FOUR
 
         MENU1:
             CALL PURCHASE_BOOK
@@ -221,15 +221,7 @@ MAIN PROC
         MENU0:
             CALL EXIT_PROGRAM
 
-        LESSTHAN_ZERO:
-                MOV AH,09H
-                LEA DX,STR_ERROR_RANGE
-                INT 21H
-                CALL PRESS_TO_CONTINUE
-                CALL CLEAR_SCREEN
-                JMP SELECTMENU
-
-        MORETHAN_FOUR:
+        RANGE_ERROR:
                 MOV AH,09H
                 LEA DX,STR_ERROR_RANGE
                 INT 21H
@@ -697,10 +689,6 @@ SHOW_CART PROC
         INT 21H
 
         INC VAR_LOOPNUM
-        MOV AX,CX
-        SUB AX,1
-        CMP AL,[VAR_LOOPNUM]
-        JE END_FORMAT
 
         MOV AH,09H
         LEA DX,STR_CART_TITLE5
@@ -709,10 +697,14 @@ SHOW_CART PROC
         ADD BX,4
         LOOP SHOW_CONTENT
 
-    END_FORMAT:
+    
         MOV AH,09H
         LEA DX,STR_CART_FORMAT_END
         INT 21H
+    
+        CALL PRESS_TO_CONTINUE
+        CALL MAIN
+
 SHOW_CART ENDP
 
 MODIFY_CART PROC
