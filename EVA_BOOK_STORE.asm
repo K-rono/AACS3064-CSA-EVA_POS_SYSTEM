@@ -9,16 +9,14 @@
         FORMAT3   DB 0DH,0AH,"    ",218,50 DUP (196),191,"$"
 		STR_SELECTMENU DB 0DH,0AH,"    ",179,"                  SELECT A TASK                   ",179,"$"
 		FORMAT4    DB 0DH,0AH,"    ",195,9 DUP (196),194,40 DUP (196),180,"$"
-		STR_MENU1  DB 0DH,0AH,"    ",179,"    ","1","    ",179,"     ","SEARCH A BOOK","                      ",179,"$"
-		STR_MENU2  DB 0DH,0AH,"    ",179,"    ","2","    ",179,"     ","PURCHASE BOOK","                      ",179,"$"
-		STR_MENU3  DB 0DH,0AH,"    ",179,"    ","3","    ",179,"     ","SHOW CART CONTENT","                  ",179,"$"
-		STR_MENU4  DB 0DH,0AH,"    ",179,"    ","4","    ",179,"     ","MODIFY CART","                        ",179,"$"
-		STR_MENU5  DB 0DH,0AH,"    ",179,"    ","5","    ",179,"     ","MAKE PAYMENT","                       ",179,"$"
-        STR_MENU6  DB 0DH,0AH,"    ",179,"    ","0","    ",179,"     ","EXIT PROGRAM","                       ",179,"$"
+		STR_MENU1  DB 0DH,0AH,"    ",179,"    ","1","    ",179,"     ","PURCHASE BOOK","                      ",179,"$"
+		STR_MENU2  DB 0DH,0AH,"    ",179,"    ","2","    ",179,"     ","SHOW CART CONTENT","                  ",179,"$"
+		STR_MENU3  DB 0DH,0AH,"    ",179,"    ","3","    ",179,"     ","MODIFY CART","                        ",179,"$"
+		STR_MENU4  DB 0DH,0AH,"    ",179,"    ","4","    ",179,"     ","MAKE PAYMENT","                       ",179,"$"
+        STR_MENU5  DB 0DH,0AH,"    ",179,"    ","0","    ",179,"     ","EXIT PROGRAM","                       ",179,"$"
 		FORMAT5    DB 0DH,0AH,"    ",192,9 DUP (196),193,40 DUP (196),217,"$"
         ; INPUT TASK
         STR_INPUT  DB 0DH,0AH,"    INPUT: ","$"
-        VAR_INPUT  DB ?
         STR_ERROR_RANGE DB 0DH,0AH,"      > > PLEASE SELECT THE VALID INDEX","$"
         ; DISPLAY CATEGORY
         STR_SELECTCATEGORY DB 0DH,0AH,"    ",179,"                  SELECT A CATEGORY               ",179,"$"
@@ -30,52 +28,136 @@
         FORMAT6     DB 0DH,0AH,"    ",218,9 DUP (196),194,27 DUP (196),194,12 DUP (196),191,"$"
 		STR_MANGA   DB 0DH,0AH,"    ",179,"         ",179,"         BOOK NAME         ",179," PRICE (RM) ",179,"$"
 		FORMAT7     DB 0DH,0AH,"    ",195,9 DUP (196),197,27 DUP (196),197,12 DUP (196),180,"$"
-		STR_MANGA1  DB 0DH,0AH,"    ",179,"    ","1","    ",179,"     ","NARUTO                ",179,"   500.00   ",179,"$"
-		STR_MANGA2  DB 0DH,0AH,"    ",179,"    ","2","    ",179,"     ","ONE PIECE             ",179,"   400.00   ",179,"$"
-		STR_MANGA3  DB 0DH,0AH,"    ",179,"    ","3","    ",179,"     ","ATTACK ON TITAN       ",179,"   300.50   ",179,"$"
-		STR_MANGA4  DB 0DH,0AH,"    ",179,"    ","4","    ",179,"     ","MY HERO ACADEMIA      ",179,"   599.90   ",179,"$"
-		STR_MANGA5  DB 0DH,0AH,"    ",179,"    ","5","    ",179,"     ","DEATH NOTE            ",179,"   299.50   ",179,"$"
+		STR_MANGA1  DB 0DH,0AH,"    ",179,"    ","1","    ",179,"     ","NARUTO                ",179,"    52.30   ",179,"$"
+		STR_MANGA2  DB 0DH,0AH,"    ",179,"    ","2","    ",179,"     ","ONE PIECE             ",179,"    56.70   ",179,"$"
+		STR_MANGA3  DB 0DH,0AH,"    ",179,"    ","3","    ",179,"     ","ATTACK ON TITAN       ",179,"    58.70   ",179,"$"
+		STR_MANGA4  DB 0DH,0AH,"    ",179,"    ","4","    ",179,"     ","MY HERO ACADEMIA      ",179,"    63.20   ",179,"$"
+		STR_MANGA5  DB 0DH,0AH,"    ",179,"    ","5","    ",179,"     ","DEATH NOTE            ",179,"    57.60   ",179,"$"
 		FORMAT8     DB 0DH,0AH,"    ",192,9 DUP (196),193,27 DUP (196),193,12 DUP (196),217,"$"
         ; DISPLAY SUPERHERO        
-		STR_SUPER1  DB 0DH,0AH,"    ",179,"    ","1","    ",179,"     ","SPIDER-MAN            ",179,"   500.00   ",179,"$"
-		STR_SUPER2  DB 0DH,0AH,"    ",179,"    ","2","    ",179,"     ","BATMAN                ",179,"   400.00   ",179,"$"
-		STR_SUPER3  DB 0DH,0AH,"    ",179,"    ","3","    ",179,"     ","SUPERMAN              ",179,"   300.50   ",179,"$"
-		STR_SUPER4  DB 0DH,0AH,"    ",179,"    ","4","    ",179,"     ","WONDER WOMAN          ",179,"   599.90   ",179,"$"
-		STR_SUPER5  DB 0DH,0AH,"    ",179,"    ","5","    ",179,"     ","X-MEN                 ",179,"   299.50   ",179,"$" 
+		STR_SUPER1  DB 0DH,0AH,"    ",179,"    ","1","    ",179,"     ","SPIDER-MAN            ",179,"    63.50   ",179,"$"
+		STR_SUPER2  DB 0DH,0AH,"    ",179,"    ","2","    ",179,"     ","BATMAN                ",179,"    56.40   ",179,"$"
+		STR_SUPER3  DB 0DH,0AH,"    ",179,"    ","3","    ",179,"     ","SUPERMAN              ",179,"    54.60   ",179,"$"
+		STR_SUPER4  DB 0DH,0AH,"    ",179,"    ","4","    ",179,"     ","WONDER WOMAN          ",179,"    55.30   ",179,"$"
+		STR_SUPER5  DB 0DH,0AH,"    ",179,"    ","5","    ",179,"     ","X-MEN                 ",179,"    61.90   ",179,"$" 
         ; DISPLAY FANTASY
-        STR_FANTASY1  DB 0DH,0AH,"    ",179,"    ","1","    ",179,"   ","THE LORD OF THE RINGS   ",179,"   500.00   ",179,"$"
-		STR_FANTASY2  DB 0DH,0AH,"    ",179,"    ","2","    ",179,"   ","HARRY POTTER            ",179,"   400.00   ",179,"$"
-		STR_FANTASY3  DB 0DH,0AH,"    ",179,"    ","3","    ",179,"   ","CHRONICLES OF NARNIA    ",179,"   300.50   ",179,"$"
-		STR_FANTASY4  DB 0DH,0AH,"    ",179,"    ","4","    ",179,"   ","GAME OF THRONES         ",179,"   599.90   ",179,"$"
-		STR_FANTASY5  DB 0DH,0AH,"    ",179,"    ","5","    ",179,"   ","WHEEL OF TIME           ",179,"   299.50   ",179,"$"        
+        STR_FANTASY1  DB 0DH,0AH,"    ",179,"    ","1","    ",179,"   ","THE LORD OF THE RINGS   ",179,"    51.40   ",179,"$"
+		STR_FANTASY2  DB 0DH,0AH,"    ",179,"    ","2","    ",179,"   ","HARRY POTTER            ",179,"    59.40   ",179,"$"
+		STR_FANTASY3  DB 0DH,0AH,"    ",179,"    ","3","    ",179,"   ","CHRONICLES OF NARNIA    ",179,"    55.80   ",179,"$"
+		STR_FANTASY4  DB 0DH,0AH,"    ",179,"    ","4","    ",179,"   ","GAME OF THRONES         ",179,"    54.60   ",179,"$"
+		STR_FANTASY5  DB 0DH,0AH,"    ",179,"    ","5","    ",179,"   ","WHEEL OF TIME           ",179,"    50.60   ",179,"$"        
+        ; CHOOSE BOOK
+        STR_CHOOSE_BOOK DB 0DH,0DH,"    ","CHOOSE A BOOK: ","$"
+        STR_BOOKNAME    DB ,"   ","BOOK NAME : ","$"
+        STR_BOOKPRICE   DB ,"   ","BOOK PRICE: RM ","$"
+        STR_BOOKQTY     DB ,"   ","BOOK QUANTITY: ","$"
+        STR_NEWBOOK     DB ,"   ","WANT TO ADD MORE BOOK ? (Y/N): ", "$"
+        STR_LIMIT_BOOK  DB 0DH,0DH, "    ","> > ONLY CAN PURCHASE A MAXIMUM OF 10", "$"
+        ; CART
+        VAR_LOOPNUM DB ?
+        STR_CART_TITLE1 DB 0DH,0AH,"    ",218,62 DUP (196),191,"$"
+        STR_CART_TITLE2 DB 0DH,0AH,"    ",179,"                             CART                             ",179,"$"
+        STR_CART_TITLE3 DB 0DH,0AH,"    ",195,7 DUP (196),194,30 DUP (196),194,12 DUP (196),194,10 DUP (196),180,"$"
+        STR_CART_TITLE4 DB 0DH,0AH,"    ",179,7 DUP (),179,"           BOOK NAME          ",179," PRICE (RM) ",179," QUANTITY ",179,"$"
+        STR_CART_TITLE5 DB 0DH,0AH,"    ",195,7 DUP (196),197,30 DUP (196),197,12 DUP (196),197,10 DUP (196),180,"$"
+        STR_CART_FORMAT1 DB 0DH,0AH,"    ",179,"   ","$" ; 1 
+        STR_CART_FORMAT2 DB ,"  ",179,"    ","$"    ; 2 NUMBER AND BOOK
+        STR_CART_FORMAT3 DB ,"    ",179,"   ","$" ; 3 BOOK AND PRICE
+        STR_CART_FORMAT4 DB ,"   ",179,"    ","$"; 4 PRICE AND QTY
+        STR_CART_FORMAT5 DB ,"    ",179,"$"
+        STR_CART_FORMAT_END DB 0DH,0AH,"    ",192,7 DUP (196),193,30 DUP (196),193,12 DUP (196),193,10 DUP (196),217,"$"
 
     COMIC_CATEGORIES DB "MANGA", "$"
                      DB "SUPERHEROES", "$"
                      DB "FANTASY", "$"
 
-    MANGA_BOOKS DB "NARUTO", "$"
-                DB "ONE PIECE", "$"
-                DB "ATTACK ON TITAN", "$"
-                DB "MY HERO ACADEMIA", "$"
-                DB "DEATH NOTE","$"
+    BOOK_NAME   DB "$"
+                DB "NARUTO               ", "$"
+                DB "ONE PIECE            ", "$"
+                DB "ATTACK ON TITAN      ", "$"
+                DB "MY HERO ACADEMIA     ", "$"
+                DB "DEATH NOTE           ", "$"
+                DB "SPIDER-MAN           ", "$"
+                DB "BATMAN               ", "$"
+                DB "SUPERMAN             ", "$"
+                DB "WONDER WOMAN         ", "$"
+                DB "X-MEN                ", "$"
+                DB "THE LORD OF THE RINGS", "$"
+                DB "HARRY POTTER         ", "$"
+                DB "CHRONICLES OF NARNIA ", "$"
+                DB "GAME OF THRONES      ", "$"
+                DB "WHEEL OF TIME        ", "$"    
 
-    SUPERHEROES_BOOKS DB "SPIDER-MAN", "$"
-                      DB "BATMAN", "$"
-                      DB "SUPERMAN", "$"
-                      DB "WONDER WOMAN", "$"
-                      DB "X-MEN", "$"
+    BOOKS_PRICE DW 5230
+                DW 5670
+                DW 5870
+                DW 6320
+                DW 5760
+                DW 6350
+                DW 5640
+                DW 5460
+                DW 5530
+                DW 6190
+                DW 5140
+                DW 5940
+                DW 5580
+                DW 5460
+                DW 5060
 
-    FANTASY_BOOKS DB "THE LORD OF THE RINGS", "$"
-                  DB "HARRY POTTER", "$"
-                  DB "CHRONICLES OF NARNIA", "$"
-                  DB "GAME OF THRONES", "$"
-                  DB "WHEEL OF TIME", "$"
+    VAR_ADJUST_BOOK_INDEX DB ?
+    NUMBER_CART DW 0
+    BX_TEMP DB 0
+    NUMBER_CHOOSE DW 0
 
-    PRICES DW 100, 400, 900, 200, 300, 250, 350, 450, 550, 650, 300, 500, 800, 150, 250
+    NAME_TEMP   DW ?    ; DW 2 BYTE , 0000
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?        ; DW 2 BYTE , 0000
 
-    CART DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    PRICE_TEMP  DW ?    
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?    ; DB 1 BYTE, 00
+
+    QTY_TEMP    Dw ?    ; DW 2 BYTE , 0000
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
     
-    INPUT_ERROR_CONTINUE_STR    DB 13,10,,15 DUP (' '),"> PRESS ANY KEY TO CONTINUE...$"
+    INPUT_ERROR_CONTINUE_STR    DB 13,10,,15 DUP (' '), "> PRESS ANY KEY TO CONTINUE...$"
     STR_BYEBYE DB 0DH,0AH,"              SHUAN Q TO BREAKING YOUR BANK :)", "$"
 .CODE
 NEWLINE PROC
@@ -113,8 +195,7 @@ MAIN PROC
             ; GET USER INPUT
             MOV AH,01H
             INT 21H
-            SUB AL,30H
-            MOV [VAR_INPUT],AL
+            SUB AL,"0"
 
             CMP AL,1
                 JE MENU1            ;   << CALL >>
@@ -123,23 +204,19 @@ MAIN PROC
             CMP AL,3                ;       |
                 JE MENU3            ;       |
             CMP AL,4                ;       |
-                JE MENU4            ;       |
-            CMP AL,5                ;       |
-                JE MENU5            ; << FUNCTION >>
-                JG MORETHAN_FIVE    ; CHECK > 5
+                JE MENU4            ; << FUNCTION >>
+                JG MORETHAN_FOUR    ; CHECK > 4                  
             CMP AL,0
                 JL LESSTHAN_ZERO
                 JE MENU0
 
         MENU1:
-            CALL DISPLAY_BOOK
+            CALL PURCHASE_BOOK
         MENU2:
-            CALL ADD_CART
-        MENU3:
             CALL SHOW_CART
-        MENU4:
+        MENU3:
             CALL MODIFY_CART
-        MENU5:
+        MENU4:
             CALL MAKE_PAYMENT
         MENU0:
             CALL EXIT_PROGRAM
@@ -152,7 +229,7 @@ MAIN PROC
                 CALL CLEAR_SCREEN
                 JMP SELECTMENU
 
-        MORETHAN_FIVE:
+        MORETHAN_FOUR:
                 MOV AH,09H
                 LEA DX,STR_ERROR_RANGE
                 INT 21H
@@ -196,9 +273,6 @@ DISPLAY_MENU PROC
         LEA DX,STR_MENU5
         INT 21H
         MOV AH,09H
-        LEA DX,STR_MENU6
-        INT 21H
-        MOV AH,09H
         LEA DX,FORMAT5
         INT 21H
         MOV AH,09H
@@ -207,7 +281,7 @@ DISPLAY_MENU PROC
         RET
 DISPLAY_MENU ENDP
 
-DISPLAY_BOOK PROC
+PURCHASE_BOOK PROC
         CALL CLEAR_SCREEN
         MOV AH,09H
         LEA DX,FORMAT3
@@ -239,7 +313,7 @@ DISPLAY_BOOK PROC
         ; GET USER INPUT
         MOV AH,01H
         INT 21H
-        SUB AL,30H
+        SUB AL,"0"
 
         CMP AL,1
         JE CATEGORY1
@@ -256,33 +330,41 @@ DISPLAY_BOOK PROC
             CALL MAIN
         CATEGORY1:
             CALL DISPLAY_MANGA_BOOKS
+            MOV VAR_ADJUST_BOOK_INDEX, 0
+            CALL CHOOSE_BOOK
+            CALL NEWLINE
             CALL PRESS_TO_CONTINUE
             CALL CLEAR_SCREEN
-            JMP DISPLAY_BOOK
+            JMP PURCHASE_BOOK
         CATEGORY2:
             CALL DISPLAY_SUPERHERO_BOOKS
+            MOV VAR_ADJUST_BOOK_INDEX, 5
+            CALL CHOOSE_BOOK
+            CALL NEWLINE
             CALL PRESS_TO_CONTINUE
             CALL CLEAR_SCREEN
-            JMP DISPLAY_BOOK
+            JMP PURCHASE_BOOK
         CATEGORY3:
             CALL DISPLAY_FANTASY_BOOKS
+            MOV VAR_ADJUST_BOOK_INDEX, 10
+            CALL CHOOSE_BOOK
+            CALL NEWLINE
             CALL PRESS_TO_CONTINUE
             CALL CLEAR_SCREEN
-            JMP DISPLAY_BOOK
+            JMP PURCHASE_BOOK
         LESSTHAN_ZERO_CATEGORY:
             MOV AH,09H
             LEA DX,STR_ERROR_RANGE
             INT 21H
             CALL PRESS_TO_CONTINUE
-            JMP DISPLAY_BOOK
+            JMP PURCHASE_BOOK
         MORETHAN_THREE_CATEGORY:
             MOV AH,09H
             LEA DX,STR_ERROR_RANGE
             INT 21H
             CALL PRESS_TO_CONTINUE
-            JMP DISPLAY_BOOK
-
-DISPLAY_BOOK ENDP
+            JMP PURCHASE_BOOK
+PURCHASE_BOOK ENDP
 
 DISPLAY_MANGA_BOOKS PROC
         MOV AH,09H
@@ -377,14 +459,265 @@ DISPLAY_FANTASY_BOOKS PROC
         RET
 DISPLAY_FANTASY_BOOKS ENDP
 
+CHOOSE_BOOK PROC
+        XOR BX,BX
+        MOV AX,NUMBER_CART
+        MOV BX_TEMP,4
+        MUL BX_TEMP
+        MOV BX,AX
+    NEW_BOOK:
+        CALL NEWLINE
+        MOV AH,09H
+        LEA DX,STR_CHOOSE_BOOK
+        INT 21H                     ; PROMPT USER CHOOSE BOOK (ADD CART)
+        MOV AH,01H
+        INT 21H
+        SUB AL,"0"
 
+        CMP AL,1
+        JL ERROR_RANGE_CHOOSEBOOK
+        CMP AL,5
+        JG ERROR_RANGE_CHOOSEBOOK
+        JMP SKIP_CHOOSE
 
-ADD_CART PROC
-ADD_CART ENDP
+        ERROR_RANGE_CHOOSEBOOK:
+            MOV AH,09H
+            LEA DX,STR_ERROR_RANGE
+            INT 21H
+            CALL PRESS_TO_CONTINUE
+            JMP CHOOSE_BOOK
+
+    SKIP_CHOOSE:
+        ADD AL,VAR_ADJUST_BOOK_INDEX
+        MOV NUMBER_CHOOSE,AX
+        XOR CX,CX
+        MOV CL,AL                   ; CUZ NUMBER2 IS 2 BYTE SO IT ONLY CAN USE THE SAME SIZE REGISTER
+        LEA SI,BOOK_NAME
+    LOOP1:
+
+    FIND_BOOKNAME:
+        MOV AL,[SI]
+        CMP AL,'$'  
+        JE BOOKNAME_FOUND
+        INC SI
+        JMP FIND_BOOKNAME
+
+    BOOKNAME_FOUND:
+        INC SI
+        LOOP LOOP1
+        CALL NEWLINE
+        MOV AH,09H
+        LEA DX,STR_BOOKNAME
+        INT 21H
+        XOR DX,DX
+        MOV DX,SI
+        INC NUMBER_CART
+        MOV NAME_TEMP[BX],DX
+        MOV AH,09H              ; PRINT BOOK NAME
+	    INT 21H
+        CALL NEWLINE
+        
+        MOV AX,NUMBER_CHOOSE
+        SUB AX,001H
+        MOV BX_TEMP,2
+        MUL BX_TEMP
+        MOV SI,AX
+
+        MOV AX,BOOKS_PRICE[SI]
+        MOV PRICE_TEMP[BX],AX   ; PRINT BOOK PRICE
+        MOV AH,09H
+        LEA DX,STR_BOOKPRICE
+        INT 21H
+
+        XOR AX,AX
+        MOV AX,PRICE_TEMP[BX]
+        PUSH BX                 ; STORE THE ARRAY LOCATION
+        CALL PRINT_PRICE
+        POP BX
+
+    QTY_POINT:
+        CALL NEWLINE
+        MOV AH,09H
+        LEA DX,STR_BOOKQTY
+        INT 21H
+        MOV AH,01H
+        INT 21H
+        SUB AX,"0"
+
+        CMP AL,10
+        JG LIMIT_BOOK_MESSAGE
+        JMP SKIP_QTY
+
+    LIMIT_BOOK_MESSAGE:
+        CALL NEWLINE
+        MOV AH,09H
+        LEA DX,STR_LIMIT_BOOK
+        INT 21H
+        CALL NEWLINE
+        CALL PRESS_TO_CONTINUE
+        CALL NEWLINE
+        JMP QTY_POINT
+
+    SKIP_QTY:
+        MOV QTY_TEMP[BX],AX
+        CALL NEWLINE
+        ADD BX,4
+
+        MOV AH,09H
+        LEA DX,STR_NEWBOOK
+        INT 21H
+        MOV AH,01H
+        INT 21H
+        SUB AL,110
+        CMP AL,0
+        JE RETURN
+        CALL NEWLINE
+        JMP NEW_BOOK
+    RETURN:
+        RET
+CHOOSE_BOOK ENDP
+
+PRINT_PRICE PROC
+                    ; IF DATA IS 5045 = 50.45
+    XOR BX,BX
+    MOV BX,100
+    XOR DX,DX
+    DIV BX          ; AX HAVE 50 AND DX HAVE 45 (REMAINDER)
+
+    PUSH DX         ; THIS CONTAIN 小数点 (REMAINDER)
+
+    XOR BX,BX
+    MOV BX,10
+    XOR DX,DX
+    DIV BX          ; AX HAVE 5 DX HAVE 0 (REMAINDER)
+
+    PUSH DX         ; THIS HAVE CONTAIN 个位数 (REMAINDER)
+
+    MOV AH,02H      ; PRINT 十位数 (AL)
+    MOV DX,AX
+    ADD DL,"0"
+    INT 21H
+
+    XOR DX,DX
+    POP DX          ; 拿回个位数
+    XOR AX,AX
+    MOV AH,02H      ; PRINT 个位数 (DL)
+    ADD DL,"0"
+    INT 21H
+    
+    MOV AH,02H            ; Print DL (the first digit) to the screen
+    MOV DL, '.'           ; Print a decimal point
+    INT 21h
+
+    POP DX          ; 拿回小数点
+    MOV AX,DX
+
+    XOR BX,BX
+    MOV BX,10
+    XOR DX,DX
+    DIV BX
+
+    PUSH DX         ; THIS HAVE CONTAIN 小数点的个位数 (REMAINDER)
+
+    MOV AH,02H      ; PRINT 小数点的十位数 (AL)
+    MOV DX,AX
+    ADD DL,"0"
+    INT 21H
+
+    POP DX          ; 拿回小数点的个位数
+    MOV AH,02H      ; PRINT 小数点的个位数 (DL)
+    ADD DL,"0"
+    INT 21H
+
+    RET
+PRINT_PRICE ENDP
+
 SHOW_CART PROC
+
+        CALL NEWLINE
+        MOV AH,09H
+        LEA DX,STR_CART_TITLE1
+        INT 21H
+        MOV AH,09H
+        LEA DX,STR_CART_TITLE2
+        INT 21H
+        MOV AH,09H
+        LEA DX,STR_CART_TITLE3
+        INT 21H
+        MOV AH,09H
+        LEA DX,STR_CART_TITLE4
+        INT 21H
+        MOV AH,09H
+        LEA DX,STR_CART_TITLE5
+        INT 21H
+
+        MOV VAR_LOOPNUM,1
+        MOV CX,NUMBER_CART
+        XOR BX,BX
+    SHOW_CONTENT:
+
+        MOV AH,09H
+        LEA DX,STR_CART_FORMAT1
+        INT 21H
+
+        MOV AH,02H
+        MOV DL,VAR_LOOPNUM
+        ADD DL,"0"
+        INT 21H
+
+        MOV AH,09H
+        LEA DX,STR_CART_FORMAT2
+        INT 21H
+
+        MOV AH,09H
+        MOV DX,NAME_TEMP[BX]    ; PRINT BOOK NAME
+        INT 21h
+
+        MOV AH,09H
+        LEA DX,STR_CART_FORMAT3
+        INT 21H
+
+        MOV AH,02H
+        MOV AX,PRICE_TEMP[BX]   ; PRINT PRICE
+        PUSH BX
+        CALL PRINT_PRICE
+        POP BX
+
+        MOV AH,09H
+        LEA DX,STR_CART_FORMAT4
+        INT 21H
+
+        MOV AH,02H
+        MOV DX,QTY_TEMP[BX]     ; PRINT QTY
+        ADD DX,30H
+        INT 21H
+        
+        MOV AH,09H
+        LEA DX,STR_CART_FORMAT5
+        INT 21H
+
+        INC VAR_LOOPNUM
+        MOV AX,CX
+        SUB AX,1
+        CMP AL,[VAR_LOOPNUM]
+        JE END_FORMAT
+
+        MOV AH,09H
+        LEA DX,STR_CART_TITLE5
+        INT 21H
+
+        ADD BX,4
+        LOOP SHOW_CONTENT
+
+    END_FORMAT:
+        MOV AH,09H
+        LEA DX,STR_CART_FORMAT_END
+        INT 21H
 SHOW_CART ENDP
+
 MODIFY_CART PROC
 MODIFY_CART ENDP
+
 MAKE_PAYMENT PROC
 MAKE_PAYMENT ENDP
 
@@ -395,8 +728,7 @@ EXIT_PROGRAM PROC
     INT 21H
 EXIT_PROGRAM ENDP
 
+    MOV AH,4CH
+    INT 21H
 
-        MOV AH,4CH
-        INT 21H
-
-        END MAIN
+END MAIN
