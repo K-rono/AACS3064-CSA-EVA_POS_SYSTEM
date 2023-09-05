@@ -65,7 +65,11 @@
         STR_CART_FORMAT3 DB ,"    ",179,"   ","$" ; 3 BOOK AND PRICE
         STR_CART_FORMAT4 DB ,"   ",179,"    ","$"; 4 PRICE AND QTY
         STR_CART_FORMAT5 DB ,"    ",179,"$"
+        STR_CART_FORMAT6 DB," ",179,"    ","$"
         STR_CART_FORMAT_END DB 0DH,0AH,"    ",192,7 DUP (196),193,30 DUP (196),193,12 DUP (196),193,10 DUP (196),217,"$"
+        STR_CART_EMPTY DB 0DH,0AH,"               >>  NO BOOK ADDED :)","$"
+        STR_CART_PREVOIUSPAGE DB 0DH,0AH,"    ","1 = SHOW PREVIOUS PAGE","$"
+        STR_CART_EXIT DB 0DH,0AH,"    ","0 = EXIT TO MAIN MENU","$"
 
     COMIC_CATEGORIES DB "MANGA", "$"
                      DB "SUPERHEROES", "$"
@@ -106,7 +110,7 @@
 
     VAR_ADJUST_BOOK_INDEX DB ?
     NUMBER_CART DW 0
-    BX_TEMP DB 0
+    FREE_TEMP DB 0
     NUMBER_CHOOSE DW 0
 
     NAME_TEMP   DW ?    ; DW 2 BYTE , 0000
@@ -157,7 +161,7 @@
                 DW ?
                 DW ?
     
-    INPUT_ERROR_CONTINUE_STR    DB 13,10,,15 DUP (' '), "> PRESS ANY KEY TO CONTINUE...$"
+    INPUT_ERROR_CONTINUE_STR    DB 0DH,0AH,15 DUP (' '), "> PRESS ANY KEY TO CONTINUE...$"
     STR_BYEBYE DB 0DH,0AH,"              SHUAN Q TO BREAKING YOUR BANK :)", "$"
 .CODE
 NEWLINE PROC
@@ -316,9 +320,9 @@ PURCHASE_BOOK PROC
         JG MORETHAN_THREE_CATEGORY
         CMP AL,0
         JL LESSTHAN_ZERO_CATEGORY
-        JE BACK_MENU
+        JE BACK_MENU_P
 
-        BACK_MENU:
+        BACK_MENU_P:
             CALL MAIN
         CATEGORY1:
             CALL DISPLAY_MANGA_BOOKS
@@ -454,8 +458,8 @@ DISPLAY_FANTASY_BOOKS ENDP
 CHOOSE_BOOK PROC
         XOR BX,BX
         MOV AX,NUMBER_CART
-        MOV BX_TEMP,4
-        MUL BX_TEMP
+        MOV FREE_TEMP,4
+        MUL FREE_TEMP
         MOV BX,AX
     NEW_BOOK:
         CALL NEWLINE
@@ -511,8 +515,8 @@ CHOOSE_BOOK PROC
         
         MOV AX,NUMBER_CHOOSE
         SUB AX,001H
-        MOV BX_TEMP,2
-        MUL BX_TEMP
+        MOV FREE_TEMP,2
+        MUL FREE_TEMP
         MOV SI,AX
 
         MOV AX,BOOKS_PRICE[SI]
@@ -626,6 +630,19 @@ PRINT_PRICE ENDP
 
 SHOW_CART PROC
 
+        MOV AX,NUMBER_CART
+        CMP AX,0
+        JNE SHOW
+
+    BACK_MENU_S:
+        MOV AH,09H
+        LEA DX,STR_CART_EMPTY
+        INT 21H
+        CALL NEWLINE
+        CALL PRESS_TO_CONTINUE
+        CALL MAIN
+
+    SHOW:
         CALL NEWLINE
         MOV AH,09H
         LEA DX,STR_CART_TITLE1
@@ -648,6 +665,12 @@ SHOW_CART PROC
         XOR BX,BX
     SHOW_CONTENT:
 
+        PUSH BX
+
+        MOV AL,VAR_LOOPNUM
+        CMP AL,9
+        JG MORE_THAN_NINE_FORMAT
+
         MOV AH,09H
         LEA DX,STR_CART_FORMAT1
         INT 21H
@@ -656,11 +679,13 @@ SHOW_CART PROC
         MOV DL,VAR_LOOPNUM
         ADD DL,"0"
         INT 21H
-
+        
         MOV AH,09H
         LEA DX,STR_CART_FORMAT2
         INT 21H
 
+    PRINT_BOOKNAME:
+        POP BX
         MOV AH,09H
         MOV DX,NAME_TEMP[BX]    ; PRINT BOOK NAME
         INT 21h
@@ -696,18 +721,87 @@ SHOW_CART PROC
 
         ADD BX,4
         LOOP SHOW_CONTENT
+        JMP END_FORMAT
 
-    
+    MORE_THAN_NINE_FORMAT:
+
+        CMP AL,10
+        JE NEXT_PAGE
+        JMP SKIP_FORMAT
+
+    NEXT_PAGE:
+        CALL NEWLINE
+        CALL PRESS_TO_CONTINUE
+        CALL CLEAR_SCREEN
+
+    SKIP_FORMAT:
+        MOV AH,09H
+        LEA DX,STR_CART_FORMAT1
+        INT 21H
+        
+        XOR AX,AX
+        MOV AL,VAR_LOOPNUM  ; AL = A
+        MOV BL,10           ; BL = A
+        DIV BL              ; AL HAVE 1 AND AH HAVE 0
+        XOR BX,BX
+        MOV FREE_TEMP,AH    ; BH = 0 (REMAINDER) 个位数
+        MOV BL,AL           ; BL = 1 十位数
+
+        XOR DX,DX
+        MOV AH,02H
+        MOV DL,BL
+        ADD DL,"0"
+        INT 21H
+        XOR DX,DX
+        MOV AH,02H
+        MOV DL,FREE_TEMP
+        ADD DL,"0"
+        INT 21H
+
+        MOV AH,09H
+        LEA DX,STR_CART_FORMAT6
+        INT 21H
+        
+        JMP PRINT_BOOKNAME
+
+    END_FORMAT:    
         MOV AH,09H
         LEA DX,STR_CART_FORMAT_END
         INT 21H
-    
-        CALL PRESS_TO_CONTINUE
-        CALL MAIN
+        
+        CALL NEWLINE
+        MOV AL,VAR_LOOPNUM
+        CMP AL,10
+        JG ASK_SHOW_PREVIOUS
+        JMP EXIT_CART
+
+        ASK_SHOW_PREVIOUS:
+            MOV AH,09H
+            LEA DX,STR_CART_PREVOIUSPAGE
+            INT 21H
+            MOV AH,09H
+            LEA DX,STR_CART_EXIT
+            INT 21H
+            CALL NEWLINE
+            MOV AH,09H
+            LEA DX,STR_INPUT
+            INT 21H
+            MOV AH,01H
+            INT 21H
+            SUB AL,"0"
+
+            CMP AL,1
+            JNE EXIT_CART
+            JMP SHOW
+
+        EXIT_CART:
+            CALL PRESS_TO_CONTINUE
+            CALL MAIN
 
 SHOW_CART ENDP
 
 MODIFY_CART PROC
+    CALL SHOW_CART
 MODIFY_CART ENDP
 
 MAKE_PAYMENT PROC
