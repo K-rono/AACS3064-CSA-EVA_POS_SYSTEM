@@ -112,6 +112,24 @@
     NUMBER_CART DW 0
     FREE_TEMP DB 0
     NUMBER_CHOOSE DW 0
+    VAR_EXIST_ARRAY DW 0
+    NEW_ARRAY_VAR DW 0
+
+    INDEX_TEMP  DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
+                DW ?
 
     NAME_TEMP   DW ?    ; DW 2 BYTE , 0000
                 DW ?
@@ -145,21 +163,21 @@
                 DW ?
                 DW ?    ; DB 1 BYTE, 00
 
-    QTY_TEMP    Dw ?    ; DW 2 BYTE , 0000
-                DW ?
-                DW ?
-                DW ?
-                DW ?
-                DW ?
-                DW ?
-                DW ?
-                DW ?
-                DW ?
-                DW ?
-                DW ?
-                DW ?
-                DW ?
-                DW ?
+    QTY_TEMP    Dw 0    ; DW 2 BYTE , 0000
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
     
     INPUT_ERROR_CONTINUE_STR    DB 0DH,0AH,15 DUP (' '), "> PRESS ANY KEY TO CONTINUE...$"
     STR_BYEBYE DB 0DH,0AH,"              SHUAN Q TO BREAKING YOUR BANK :)", "$"
@@ -484,10 +502,28 @@ CHOOSE_BOOK PROC
             JMP CHOOSE_BOOK
 
     SKIP_CHOOSE:
+        
         ADD AL,VAR_ADJUST_BOOK_INDEX
+        PUSH AX
+        PUSH BX
+        CALL FIND_SAME_BOOK
+        POP BX         ;HERE CANNOT POP WITH ORIGINAL BX, DUE TO THE OPERATION OF SAME BOOK ARRAY
+        
+
+        CMP VAR_EXIST_ARRAY,1
+        JE CHANGE_ARRAY
+        JMP SKIP_EXIST_ARRAY
+        CHANGE_ARRAY:
+            MOV BX,NEW_ARRAY_VAR
+            DEC NUMBER_CART
+
+        SKIP_EXIST_ARRAY:
+        MOV INDEX_TEMP[BX],AX
+        POP AX
         MOV NUMBER_CHOOSE,AX
         XOR CX,CX
         MOV CL,AL                   ; CUZ NUMBER2 IS 2 BYTE SO IT ONLY CAN USE THE SAME SIZE REGISTER
+        XOR SI,SI
         LEA SI,BOOK_NAME
     LOOP1:
 
@@ -505,7 +541,7 @@ CHOOSE_BOOK PROC
         MOV AH,09H
         LEA DX,STR_BOOKNAME
         INT 21H
-        XOR DX,DX
+        XOR DX,DX 
         MOV DX,SI
         INC NUMBER_CART
         MOV NAME_TEMP[BX],DX
@@ -513,11 +549,13 @@ CHOOSE_BOOK PROC
 	    INT 21H
         CALL NEWLINE
         
+        PUSH BX
         MOV AX,NUMBER_CHOOSE
         SUB AX,001H
-        MOV FREE_TEMP,2
-        MUL FREE_TEMP
+        MOV BL,2
+        MUL BL
         MOV SI,AX
+        POP BX
 
         MOV AX,BOOKS_PRICE[SI]
         MOV PRICE_TEMP[BX],AX   ; PRINT BOOK PRICE
@@ -555,6 +593,7 @@ CHOOSE_BOOK PROC
         JMP QTY_POINT
 
     SKIP_QTY:
+        ADD AX,QTY_TEMP[BX]
         MOV QTY_TEMP[BX],AX
         CALL NEWLINE
         ADD BX,4
@@ -564,7 +603,21 @@ CHOOSE_BOOK PROC
         INT 21H
         MOV AH,01H
         INT 21H
-        SUB AL,110
+        CMP AL,110              ; LOEWCASE OF N
+        JE TO_PPERCASE_N
+        CMP AL,121              ; LOEWCASE OF Y
+        JE TO_UPPERCASE_Y
+        JMP VERIFY_NEW_EXIT
+
+    TO_PPERCASE_N:
+        SUB AL," "
+        JMP VERIFY_NEW_EXIT
+
+    TO_UPPERCASE_Y:
+        SUB AL," "
+
+    VERIFY_NEW_EXIT:
+        SUB AL,78
         CMP AL,0
         JE RETURN
         CALL NEWLINE
@@ -572,6 +625,25 @@ CHOOSE_BOOK PROC
     RETURN:
         RET
 CHOOSE_BOOK ENDP
+
+FIND_SAME_BOOK PROC
+    XOR BX,BX
+    MOV CX,15
+LOOP_FIND_BOOK:
+    CMP AX,INDEX_TEMP[BX]
+    JE NO_ENTER_NEXTARRAY
+    ADD BX,4
+    LOOP LOOP_FIND_BOOK
+
+    MOV VAR_EXIST_ARRAY,0
+    RET
+
+    NO_ENTER_NEXTARRAY:         ; CANNOT POP BX, DUE TO FIND THE ARRAY AT BX SUCH AS '2TH' NEED ADD QTY IN 2TH ARRAY
+        MOV VAR_EXIST_ARRAY,1
+        MOV NEW_ARRAY_VAR,BX
+        RET
+
+FIND_SAME_BOOK ENDP
 
 PRINT_PRICE PROC
                     ; IF DATA IS 5045 = 50.45
@@ -745,7 +817,7 @@ SHOW_CART PROC
         DIV BL              ; AL HAVE 1 AND AH HAVE 0
         XOR BX,BX
         MOV FREE_TEMP,AH    ; BH = 0 (REMAINDER) 个位数
-        MOV BL,AL           ; BL = 1 十位数
+        MOV BL,AL           ; BL = 1 十位数 
 
         XOR DX,DX
         MOV AH,02H
