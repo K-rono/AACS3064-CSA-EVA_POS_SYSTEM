@@ -52,7 +52,9 @@
         STR_BOOKPRICE   DB ,"   ","BOOK PRICE: RM ","$"
         STR_BOOKQTY     DB ,"   ","BOOK QUANTITY: ","$"
         STR_NEWBOOK     DB ,"   ","WANT TO ADD MORE BOOK ? (Y/N): ", "$"
-        STR_LIMIT_BOOK  DB 0DH,0DH, "    ","> > ONLY CAN PURCHASE A MAXIMUM OF 10", "$"
+        STR_LIMIT_BOOK1 DB 0DH,0DH, "      ","> > ONLY CAN PURCHASE A MAXIMUM OF 9", "$"
+        STR_LIMIT_BOOK2 DB 0DH,0DH, "      ","> > MINIMUM PURCHASE 1 BOOK", "$"
+        STR_YES_NO_ERROR DB 0DH,0DH, "      ","> > PLEASE ENTER 'Y' OR 'N' ", "$"
         ; CART
         VAR_LOOPNUM DB ?
         STR_CART_TITLE1 DB 0DH,0AH,"    ",218,62 DUP (196),191,"$"
@@ -163,7 +165,21 @@
                 DW ?
                 DW ?    ; DB 1 BYTE, 00
 
-    QTY_TEMP    Dw 0    ; DW 2 BYTE , 0000
+    QTY_TEMP    DW 0    ; DW 2 BYTE , 0000
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
+                DW 0
                 DW 0
                 DW 0
                 DW 0
@@ -181,6 +197,7 @@
     
     INPUT_ERROR_CONTINUE_STR    DB 0DH,0AH,15 DUP (' '), "> PRESS ANY KEY TO CONTINUE...$"
     STR_BYEBYE DB 0DH,0AH,"              SHUAN Q TO BREAKING YOUR BANK :)", "$"
+    
 .CODE
 NEWLINE PROC
         MOV AH,02H
@@ -499,6 +516,7 @@ CHOOSE_BOOK PROC
             LEA DX,STR_ERROR_RANGE
             INT 21H
             CALL PRESS_TO_CONTINUE
+            CALL NEWLINE
             JMP CHOOSE_BOOK
 
     SKIP_CHOOSE:
@@ -577,53 +595,80 @@ CHOOSE_BOOK PROC
         MOV AH,01H
         INT 21H
         SUB AX,"0"
-
-        CMP AL,10
-        JG LIMIT_BOOK_MESSAGE
+        
+        XOR AH,AH
+        
+        CMP AL,9
+        JG LIMIT_BOOK_MESSAGE1
+        CMP AL,1
+        JL LIMIT_BOOK_MESSAGE2
         JMP SKIP_QTY
 
-    LIMIT_BOOK_MESSAGE:
+    LIMIT_BOOK_MESSAGE1:
         CALL NEWLINE
         MOV AH,09H
-        LEA DX,STR_LIMIT_BOOK
+        LEA DX,STR_LIMIT_BOOK1
         INT 21H
+        CALL PRESS_TO_CONTINUE
         CALL NEWLINE
+        JMP QTY_POINT
+
+    LIMIT_BOOK_MESSAGE2:
+        CALL NEWLINE
+        MOV AH,09H
+        LEA DX,STR_LIMIT_BOOK2
+        INT 21H
         CALL PRESS_TO_CONTINUE
         CALL NEWLINE
         JMP QTY_POINT
 
     SKIP_QTY:
         ADD AX,QTY_TEMP[BX]
+
+        PUSH AX
+
+        CALL NEWLINE
+
+        POP AX
+
         MOV QTY_TEMP[BX],AX
+
         CALL NEWLINE
         ADD BX,4
 
+    ASK_CONTINUE_ADD:
         MOV AH,09H
         LEA DX,STR_NEWBOOK
         INT 21H
         MOV AH,01H
         INT 21H
-        CMP AL,110              ; LOEWCASE OF N
-        JE TO_PPERCASE_N
-        CMP AL,121              ; LOEWCASE OF Y
-        JE TO_UPPERCASE_Y
-        JMP VERIFY_NEW_EXIT
-
-    TO_PPERCASE_N:
-        SUB AL," "
-        JMP VERIFY_NEW_EXIT
-
-    TO_UPPERCASE_Y:
-        SUB AL," "
-
-    VERIFY_NEW_EXIT:
-        SUB AL,78
-        CMP AL,0
-        JE RETURN
+        CMP AL,'n'
+        JE EXIT_ADD
+        CMP AL,'y'
+        JE CONTINUE_ADD
+        CMP AL,'N'
+        JE EXIT_ADD
+        CMP AL,'Y'
+        JE CONTINUE_ADD
+        JMP YN_VERIFY
+    
+    CONTINUE_ADD:
         CALL NEWLINE
         JMP NEW_BOOK
-    RETURN:
+
+    EXIT_ADD:
         RET
+
+    YN_VERIFY:
+        CALL NEWLINE
+        MOV AH,09H
+        LEA DX,STR_YES_NO_ERROR
+        INT 21H
+        CALL PRESS_TO_CONTINUE
+        CALL NEWLINE
+        CALL NEWLINE
+        JMP ASK_CONTINUE_ADD
+        
 CHOOSE_BOOK ENDP
 
 FIND_SAME_BOOK PROC
@@ -863,8 +908,21 @@ SHOW_CART PROC
             SUB AL,"0"
 
             CMP AL,1
-            JNE EXIT_CART
+            JE SHOW1
+            CMP AL,0
+            JE EXIT_CART
+            JMP ERROR_MESSAGE
+
+        SHOW1:
             JMP SHOW
+        
+        ERROR_MESSAGE:
+            MOV AH,09H
+            LEA DX,STR_ERROR_RANGE
+            INT 21H
+            CALL PRESS_TO_CONTINUE
+            CALL NEWLINE
+            JMP ASK_SHOW_PREVIOUS
 
         EXIT_CART:
             CALL PRESS_TO_CONTINUE
