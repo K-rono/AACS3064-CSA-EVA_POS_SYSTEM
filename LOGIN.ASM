@@ -1,22 +1,27 @@
 .MODEL SMALL
 .STACK 100
 .DATA
+    STR_INPUT  DB 0DH,0AH,"    INPUT: ","$"
+    STR_BYEBYE DB 0DH,0AH,"              SHUAN Q TO BREAKING YOUR BANK :)", "$"
+    IS_MEMBER DB 0
+
     ;NOTE - 13 STANDS FOR CARRIAGE RETURN / 10 STANDS FOR LINE FEED
-    LOGO                        DB 0DH,0AH,14 DUP (" ")," =====                "
-                                DB 0DH,0AH,14 DUP (" ")," ||                   "
-                                DB 0DH,0AH,14 DUP (" ")," ===\\=    //         "
-                                DB 0DH,0AH,14 DUP (" ")," ||  \\   //\\        "
-                                DB 0DH,0AH,14 DUP (" ")," =====\\ //  \\       "
-                                DB 0DH,0AH,14 DUP (" "),"       \//====\\      "
-                                DB 0DH,0AH,14 DUP (" "),"       //      \\ .INC",'$'
+    LOGO                        DB 0DH,0AH,21 DUP (" ")," =====                "
+                                DB 0DH,0AH,21 DUP (" ")," ||                   "
+                                DB 0DH,0AH,21 DUP (" ")," ===\\=    //         "
+                                DB 0DH,0AH,21 DUP (" ")," ||  \\   //\\        "
+                                DB 0DH,0AH,21 DUP (" ")," =====\\ //  \\       "
+                                DB 0DH,0AH,21 DUP (" "),"       \//====\\      "
+                                DB 0DH,0AH,21 DUP (" "),"       //      \\ .INC",'$'
 
 
-    LOGIN_MENU_STR              DB 0DH,0AH,14 DUP (" "),201,20 DUP (205),187
-		                        DB 0DH,0AH,14 DUP (" "),186,"  CHOOSE AN ACTION  ",186
-		                        DB 0DH,0AH,14 DUP (" "),200,20 DUP (205),188
-                                DB 0DH,0AH,14 DUP (" "),186," 1 ",186," LOGIN          ",186
-                                DB 0DH,0AH,14 DUP (" "),186," 2 ",186," QUIT           ",186
-                                DB 0DH,0AH,14 DUP (" "),200,20 DUP (205),188
+    LOGIN_MENU_STR              DB 0DH,0AH,14 DUP (" "),201,30 DUP (205),187
+		                        DB 0DH,0AH,14 DUP (" "),186,7 DUP (" "),"CHOOSE AN ACTION",7 DUP (" "),186
+		                        DB 0DH,0AH,14 DUP (" "),200,30 DUP (205),188
+                                DB 0DH,0AH,14 DUP (" "),186," 1 ",186," LOGIN                    ",186
+                                DB 0DH,0AH,14 DUP (" "),186," 2 ",186," CONTINUE AS GUEST        ",186
+                                DB 0DH,0AH,14 DUP (" "),186," 3 ",186," QUIT                     ",186
+                                DB 0DH,0AH,14 DUP (" "),200,30 DUP (205),188
                                 DB 0DH,0AH,14 DUP (" "),"ENTER CHOICE > $"
 
                                 
@@ -32,14 +37,18 @@
     INCORRECT_LOGIN_NUM         DB 0
     FORCE_LOCK_SYSTEM_STR       DB 0DH,0AH,"EXCEEDED MAXIMUM NUMBER OF TRIES [3]. SYSTEM LOCKED.",'$'
 
-    STR_BYEBYE DB 0DH,0AH,"              SHUAN Q TO BREAKING YOUR BANK :)", "$"
+    
+
+    
 .CODE
-MAIN PROC
+MAIN PROC   
     MOV AX,@DATA
     MOV DS,AX
 
+
     RESTART_IF_INVALID_INPUT:
         CALL LOGIN_MENU
+        
         ;LOGIN MENU USER INPUT CHOICE
         MOV AH,01H  ;INPUT SINGLE CHARACTER
         INT 21H
@@ -47,15 +56,20 @@ MAIN PROC
         CMP AL,'1'
         JE LOGIN
         CMP AL,'2'
+        JE CONTINUE_GUEST
+        CMP AL,'3'
         JE EXIT
     
         ;ANY OTHER INPUT
         MOV AH,09H
-        LEA DX,MENU_ERROR_WARNING_STR
+        LEA DX,MENU_ERROR_WARNING_STR   
         INT 21H
         CALL INPUT_ERROR_CONTINUE
         JMP RESTART_IF_INVALID_INPUT
 
+    CONTINUE_GUEST:
+        MOV AL,0
+        MOV IS_MEMBER,AL
     MAIN_MENU_SECTION:
         CALL MAIN_MENU
 
@@ -163,6 +177,8 @@ LOGIN PROC
 
             CMP BL,'$'
             JNE NOT_END_OF_STRING ;EITHER THIS APPROACH OR USE FIXED LOOPS
+            MOV AL,1
+            MOV IS_MEMBER,AL
             JMP MAIN_MENU_SECTION
 
         NOT_END_OF_STRING:
